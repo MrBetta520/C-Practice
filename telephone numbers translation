@@ -1,0 +1,121 @@
+#include <iostream>
+#include <string>
+#include <cstring>
+#include <iomanip>
+#include <ctype.h>
+
+int main()
+{
+    std::cout << "Welcome to number translator." << std::endl;
+    std::cout << "If you want to continue, press y or Y. Press any other key to leave." << std::endl;
+    char choice;                                         // create variable choice to give user a prompt to play the game or not.
+    std::cin >> choice;
+
+    while (choice == 'y' || choice == 'Y')                 // if choice is y or Y, the program continue, otherwise terminate the program.
+    {
+        std::cout << "Please enter your combination of digits and letters." << std::endl;
+        std::string combination;
+        std::cin.ignore();
+        getline(std::cin, combination);                    // Get user input number
+        
+        std::string newString = "";                        // Create newString to store the result.
+        std::string removeSpace = "";                      // Create removeSpace to store the string remove all the spaces.
+        int isSpecial = 0;                                 // Create isSpacial to check if the character is special symble.
+
+        for (int i = 0; i < combination.length(); i++)     // Loop through the user input string, assign all the non-space characters to removeSpace variable
+        {
+            if (combination[i] != ' ')
+            {
+                 removeSpace += combination[i];
+            }
+        }
+        for (int j = 0; j < removeSpace.length(); j++)     // Loop through the removeSpace string
+        {
+            if (!isdigit(removeSpace[j]) && !isalpha(removeSpace[j]))          // if the character is special character, isSpecial = 1, then terminate this loop. 
+                                                                               // And go the line 106. 
+            {
+                std::cout << "Number can not contain special symble." << std::endl;
+                isSpecial = 1;
+                break;
+            }
+            char ch = tolower(removeSpace[j]);                                 // Convert all the characters to lower case.
+                
+            switch (ch)                                                        // Use switch to get coordinate value, and assign to result string.
+            {
+                case 'a':
+                case 'b':
+                case 'c':
+                case '2':
+                    newString += "2";
+                    break;
+                case 'd':
+                case 'e':
+                case 'f':
+                case '3':
+                    newString += "3";
+                    break;
+                case 'g':
+                case 'h':
+                case 'i':
+                case '4':
+                    newString += "4";
+                    break;
+                case 'j':
+                case 'k':
+                case 'l':
+                case '5':
+                    newString += "5";
+                    break;
+                case 'm':
+                case 'n':
+                case 'o':
+                case '6':
+                    newString += "6";
+                    break;
+                case 'p':
+                case 'q':
+                case 'r':
+                case 's':
+                case '7':
+                    newString += "7";
+                    break;
+                case 't':
+                case 'u':
+                case 'v':
+                case '8':
+                    newString += "8";
+                    break;
+                case 'w':
+                case 'x':
+                case 'y':
+                case 'z':
+                case '9':
+                    newString += "9";
+                    break;
+                case '1':
+                    newString += "1";
+                    break;
+                default:
+                    break;        
+            }
+            
+        }
+        if (isSpecial)                                // if isSpecial is true, means the user input contains special symble, then clear the result string.
+        {
+            newString.clear();
+        }
+        else                                           // if user input doesn't contain special symble, then insert - after third letter, and then trim the result.
+        {
+            newString = newString.insert(3, 1, '-').substr(0, 8);
+            std::cout << newString << std::endl;
+        }
+        // ask user if they want to continue input number or exit.
+        std::cout << "Do you want to translate another number? If Yes, press y or Y. Otherwise, press n or N to leave." << std::endl;
+        std::cin >> choice;
+    }
+    
+    std::cout << "Thank you for using this application. Goodbye!";
+
+    
+    return 0;
+}
