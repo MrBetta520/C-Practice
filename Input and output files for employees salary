@@ -1,0 +1,60 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <iomanip>
+
+int main()
+{
+    std::ofstream outFile;                                                                                                  // declare out file stream variable
+    std::ifstream inFile;                                                                                                   // declare in file stream variable
+    std::string firstName, lastName;                                                                                        // declare string variables for first name and last name
+    double salary, rate;                                                                                                    // declare double variable for salary and rate
+
+    inFile.open("C:\\Users\\Yang Yu\\Desktop\\CS225 C++\\Unit 1\\curSalary.txt");                                           // open in file stream
+    if (inFile.fail())                                                                                                      // check if the file is opened successfully. If not, send message to cerr and terminate the program.
+    {
+        std::cerr << "Can't open input file. Abort. \n";
+        return 1;
+    }
+    else
+    {
+        outFile.open("C:\\Users\\Yang Yu\\Desktop\\CS225 C++\\Unit 1\\newSalary.txt");                                      // if the in file stream opened successfully, open out file stream. 
+        int count = 0;                                                                                                      // declare count variable to count the number of records.
+
+        if (outFile.fail())                                                                                                 // check if the out file can be created, if not, don't need to perform the rest step, just terminate the program.
+        {
+            std::cerr << "can't create output file. Abort. \n";
+            return 1;
+        }
+        else
+        {
+            while (inFile >> lastName)                                                                                      // if the out file can be terminated, then read the records line by line, and assign the value to coordinated variables.
+            {
+                inFile >> firstName;
+                inFile >> salary;
+                inFile >> rate;
+
+                double newSalary = salary * (100 + rate);                                                                   // calculate the new salary by add rate.
+                newSalary /= 100;
+                count++;                                                                                                    // after read the records in one line, increment count by 1.
+                outFile << firstName << " " << lastName << " ";                                                             // write the new records into new file.
+                outFile << std::fixed << std::setprecision(2) << newSalary << std::endl;
+                
+            }
+        }
+        
+        if (count == 0)                                                                                                     // if count = 0, that means the current salary file is empty, then print out warning message.
+        {
+            std::cout << "Warning: empty input file. Output file created but is empty." << std::endl;
+        }
+        else                                                                                                                // if count != 0, that means the current salary contains records, then print out the count of the records
+        {
+            std::cout << count << " records processed and saved in newSalary.txt\n";
+        }
+        outFile.close();                                                                                                    // because out file is opened in the else statement, so I close it in the else statement first.
+    }
+
+    inFile.close();                                                                                                         // close in file stream.
+
+    return 0;
+}
