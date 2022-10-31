@@ -1,0 +1,73 @@
+//************************************************************************************
+// Author: Yang Yu
+// 
+// This program shows how to use overloaded functions. Because compareDouble function 
+// return different data type, so it is not an example of overloaded function.
+//************************************************************************************
+
+#include <iostream>
+
+// Function prototype
+int compare(int a, int b);  
+int compare(char a, char b);
+double compareDouble(double a, double b);
+int compare(std::string a, std::string b);
+
+int main()
+{
+    // declare int variable
+    int a = 5;                                       
+int b = 5;
+    // declare char variable
+    char c = 'A';                                    
+    char d = 'a';
+    // declare double variable
+    double e = 4.5;                                  
+    double f = 4.0;
+    // declare string variable
+    std::string g = "dave";                          
+    std::string h = "ab";
+
+    // invoke compare function and print result
+std::cout << compare(a, b) << std::endl;
+    // invoke compare function and print result
+std::cout << compare(c, d) << std::endl;     
+    // invoke compareDouble function and print result            
+std::cout << compareDouble(e, f) << std::endl;     
+    // invoke compare function and print result      
+    std::cout << compare(g, h) << std::endl;                 
+    return 0;
+}
+
+// create compare function to compare different integers and return the difference.
+int compare(int a, int b)                                    
+{                                                            
+    return a - b;
+}
+// create compare function to compare different characters and return the difference.
+int compare(char a, char b)                                  
+{                                                            
+    return a - b;
+}
+// create compareDouble function to compare different doubles and return the difference.
+double compareDouble(double a, double b)                     
+{                                                            
+    return a - b;
+}
+// create compare function to compare different strings 
+int compare(std::string a, std::string b)                    
+{
+    // if string a smaller than string b, return -1.
+    if (a < b)                                               
+    {
+        return -1;
+}
+    // if string a greater than string b, return 1.
+    else if (a > b)                                          
+    {
+        return 1;
+    }
+    // if string a equal string b, return 0.
+    return 0;                                                
+}
+
