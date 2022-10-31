@@ -1,0 +1,151 @@
+
+//********************************************************************************
+// Author: Yang Yu
+// 
+// This program create a tool to convert the time from 12-hour notation to 24-hour notation, 
+// or othrewise.
+//*********************************************************************************
+
+#include <iostream>
+#include <string>
+#include <cctype>
+
+// function prototype
+
+// displayResult function collects the hours, minutes, timeType, and amOrPm to print out the proper time format.
+// Pre: receive all the values
+// Post: print all the values in corresponding format.
+void displayResult(std::string hours/*IN*/, std::string minutes/*IN*/, std::string timeType/*IN*/, std::string amOrPm/*IN*/);
+
+// twentyFourToTwelve function receive the values of hours and ap, then generate new value after calculation.
+//Pre: receive all the values
+//Post: update the value of hours. Assign the value of ap.
+void twentyFourToTwelve(std::string& hours/*INOUT*/, std::string& ap/*OUT*/);
+
+// twelveToTwentyFour function is used to convert 12-hour notation to 24-hour notation
+//Pre: receive all the values
+//Post: update the value of hours
+void twelveToTwentyFour(std::string& hours/*INOUT*/, char amOrPm/*IN*/);
+void menu();
+
+// getInput function is used to get values from users, and then invoke functions depends on the user choice.
+// Pre: user input values of hours and minutes
+// Post: after execution, the hours and minutes get updated.
+void getInput(std::string choose/*IN*/);
+
+int main()
+{
+    menu();                                     // display the menu.
+    std::string choose;
+    std::cin >> choose;                         // prompt user to choose which operation they want to perform.
+    std::cout << std::endl;
+
+    if (choose == "0")                          // if user chooses 0, terminate program.
+    {
+        return 1;
+    }
+    while (choose != "0")                       // repeat program untill user chooses 0.
+    {
+        getInput(choose);
+        menu();
+        std::cin >> choose;
+        std::cout << std::endl;
+    }
+    return 0;
+}
+
+void menu()                                    // display menu, so user can choose option.
+{
+    std::cout << "Options --" << std::endl;
+    std::cout << "1: To convert time from 12-hour notation to 24-hour notation." << std::endl;
+    std::cout << "2. To convert time from 24-hour notation to 12-hour notation." << std::endl;
+    std::cout << "0: To quit the program." << std::endl;
+    std::cout << "Choose: ";
+}
+void getInput(std::string choose)
+{
+    std::string hours;                            // declare hours and minutes, then assign the values by user input.
+    std::string minutes;
+    std::cout << "Enter hours: ";
+    std::cin >> hours;
+    std::cout << std::endl;
+    std::cout << "Enter minutes: ";
+    std::cin >> minutes;
+    std::cout << std::endl;
+    if (choose == "1")                            // if user choose 1, perform 12-hour notation to 24-hour notation convertion.
+    {
+        char ampm;
+        std::string ap;
+        std::cout << "Enter AM/PM <A or P>: ";
+        std::cin >> ampm;
+        std::cout << std::endl;
+        twelveToTwentyFour(hours, ampm);
+        displayResult(hours, minutes, choose, ap);   // after calculation and update the newest value of hours and minutes, print the result.
+    }
+    else if (choose == "2")                          // if user chooses 2, perform 24-hour notation to 12-hour notation convertion.
+    {
+        std::string ap;
+        twentyFourToTwelve(hours, ap);
+        displayResult(hours, minutes, choose, ap);   // after calculation and update the newest value of hours and minutes, print the result.
+    }
+}
+void twentyFourToTwelve(std::string& hours, std::string& ap)  // this function is used to convert 24-hour notation to 12-hour notation. 
+{
+    if (hours == "00")
+    {
+        hours = "12";
+        ap = "AM";
+    }
+    else if (stoi(hours) >= 1 && stoi(hours) <= 11)
+    {
+        ap = "AM";
+    }
+    else if (hours == "12")
+    {
+        ap = "PM";
+    }
+    else if (stoi(hours) >= 13 && stoi(hours) <= 23)
+    {
+        ap = "PM";
+        hours = std::to_string(stoi(hours) - 12);
+    }
+    
+}
+void twelveToTwentyFour(std::string& hours, char amOrPm)  // this function is used to convert 12-hour notation to 24-hour notation.
+{
+    if (hours == "12" && tolower(amOrPm) == 'a')
+    {
+        hours = "00";
+    }
+    else if (stoi(hours) >= 1 && stoi(hours) <= 11 && tolower(amOrPm) == 'p')
+    {
+        hours = std::to_string(stoi(hours) + 12);
+    }
+}
+void displayResult(std::string hours, std::string minutes, std::string timeType, std::string amOrPm)  // print result based on the user's choice
+{
+    if (timeType == "1")
+    {
+        if (stoi(minutes) < 10)
+        {
+            std::cout << "The time is: " << hours << ":" << "0" << minutes << std::endl << std::endl;
+        }
+        else
+        {
+            std::cout << "The time is: " << hours << ":" << minutes << std::endl << std::endl;
+        }
+        
+    }
+    else if (timeType == "2")
+    {
+        if (stoi(hours) < 10)
+        {
+            std::cout << "The time is: " << "0" << hours << ":" << minutes << " " << amOrPm << std::endl << std::endl;
+        }
+        else
+        {
+            std::cout << "The time is: " << hours << ":" << minutes << " " << amOrPm << std::endl << std::endl;
+        }
+    }
+    
+}
