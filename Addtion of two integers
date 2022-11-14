@@ -1,0 +1,186 @@
+//************************************************************************
+// Author: Yang Yu
+//
+// This project is used to add two integer numbers that are greater than 
+// the biggest integer number but don't change the data type of int.
+//************************************************************************
+
+//************************************************************************
+// 1. read the first number.
+// 1.1. print out the prompt message
+// 1.2. create dynamic array to store every char in the user input
+// 2. read the second number.
+// 2.1. print out the prompt message.
+// 2.2. create dynamic array to store every char in the user input
+// 3. determine which dynamic's length is bigger, then use the small one 
+//    as index from the last index of the arrays add up each number on the index
+//    and carry.
+// 4. once the small array done, the larger array should have more indice, then
+//    use the rest indice to add up the corresponding value and carry.
+// 5. if the result array's first number is 0. Then create another dynamic array
+//    to store each number of the previous array start from the second index. Then
+//    return the new array. 
+//    if the result array's first number is not 0, return the result array.
+// 6. loop through the result array, and print out each number in the array.
+//*************************************************************************
+
+
+#include <iostream>
+#include <string>
+
+// read in a number
+int* readNum(int& numOfDigits/*OUT*/);
+// pre: user input a string
+// post: convert the string to a dynamic array
+
+// add two numbers. Store result in third
+int* sumNum(const int* pNum1/*IN*/, int numOfDigits1/*IN*/, const int* pNum2/*IN*/, int numOfDigits2/*IN*/, int& numOfDigitsResult/*OUT*/);
+// pre: two dynamic arrays
+// post: add up the two dynamic arrays and return the result
+
+// print a number stored in int array
+void print(const int* pNum/*IN*/, int numOfDigits/*IN*/);
+// pre: a result dynamic array
+// post: print out the result that contains all the numbers in the array.
+
+int main()
+{
+    // create two dynamic arrays
+    int userAmtOfDigits1 = 0; 
+    int userAmtOfDigits2 = 0;
+    int totalDigits;
+    int *userNumberPtr1 = new int[userAmtOfDigits1];
+    int *userNumberPtr2 = new int[userAmtOfDigits2];
+    int *userNumberPtr3;
+
+    // get the first dynamic array
+    userNumberPtr1 = readNum(userAmtOfDigits1);
+    // get the second dynamic array
+    userNumberPtr2 = readNum(userAmtOfDigits2);
+
+    // get the result of addition of two arrays 
+    userNumberPtr3 = sumNum(userNumberPtr1, userAmtOfDigits1, userNumberPtr2, userAmtOfDigits2, totalDigits);
+
+    // print out the result
+    print(userNumberPtr3, totalDigits);
+
+    return 0;
+ }
+
+int* readNum(int& numOfDigits/*OUT*/)
+{
+    // get the number from user input
+    std::string userInput;
+    int userNumber, amtOfDigits;
+
+    std::cout << "Please enter a positive integer: ";
+    std::getline(std::cin, userInput);
+
+    // update the number of digits in the array.
+    numOfDigits = userInput.length();
+    // create a new array that the size equal to the user input string
+    int* returnNumPtr = new int[userInput.length()];
+
+    // loop through the string, and convert the chars to numbers.
+    for (int i = 0; i < userInput.length(); i++)
+    {
+        returnNumPtr[i] = userInput[i] - 48;
+    }
+    return returnNumPtr;
+}
+
+int* sumNum(const int* pNum1/*IN*/, int numOfDigits1/*IN*/, const int* pNum2/*IN*/, int numOfDigits2/*IN*/, int& numOfDigitsResult/*OUT*/)
+{
+    // declare a new array
+    int* pNum3;
+    // two conditions, first array'size greater or equal to second array'size
+    if (numOfDigits1 >= numOfDigits2)
+    {
+        // if the first number of array is 9 and carry is 1, the length of the result 
+        // can be greater than the first array, so the size of result should be 1 digit 
+        // greater than the first array.
+        numOfDigitsResult = numOfDigits1 + 1;
+        // initialize the result array
+        pNum3 = new int[numOfDigitsResult];
+        int carry = 0;
+        int i = numOfDigitsResult - 1;
+        int j = numOfDigits1 - 1;
+        int k = numOfDigits2 - 1;
+        // use the smaller array's length as first while condition
+        while (k >= 0)
+        {
+            // add up each value of the position and carry
+            pNum3[i] = (pNum1[j] + pNum2[k] + carry) % 10;
+            carry = (pNum1[j] + pNum2[k] + carry) / 10;
+            i--;
+            j--;
+            k--;
+        }
+        // once the first while done, the larger array maybe still have
+        // digits, so the second while continue add up the rest values
+        while (j >= 0)
+        {
+            pNum3[i] = (pNum1[j] + carry) % 10;
+            carry = (pNum1[j] + carry) / 10;
+            i--;
+            j--;
+        }
+        pNum3[i] = carry % 10;
+    }
+    else
+    {
+        // if the second array is greater than first array, we use second 
+        // array's size + 1 as the result's size
+        numOfDigitsResult = numOfDigits2 + 1;
+        // initialize result array
+        pNum3 = new int[numOfDigitsResult];
+        int carry = 0;
+        int i = numOfDigitsResult - 1;
+        int j = numOfDigits1 - 1;
+        int k = numOfDigits2 - 1;
+        while (j >= 0)
+        {
+            pNum3[i] = (pNum1[j] + pNum2[k] + carry) % 10;
+            carry = (pNum1[j] + pNum2[k] + carry) / 10;
+            i--;
+            j--;
+            k--;
+        }
+        while (k >= 0)
+        {
+            pNum3[i] = (pNum2[k] + carry) % 10;
+            carry = (pNum2[k] + carry) / 10;
+            i--;
+            k--;
+        }
+        pNum3[i] = carry % 10;
+    }
+    // Once the addition is done, the result array maybe have
+    // a leading 0. To remove the leading 0, we create another 
+    // result array and assign the values from the second position
+    // of the original result array to the new result array. Then 
+    // return the new result array.
+    if (pNum3[0] == 0)
+    {
+        int* pNum4 = new int[numOfDigitsResult - 1];
+        for (int i = 0; i < numOfDigitsResult - 1; i++)
+        {
+            pNum4[i] = pNum3[i + 1];
+            
+        }
+        numOfDigitsResult = numOfDigitsResult - 1;
+        return pNum4;
+    }
+    // if no leading 0, return original result array.
+    return pNum3;
+}
+
+void print(const int* pNum/*IN*/, int numOfDigits/*IN*/)
+{
+    std::cout << "The sum of the numbers is: ";
+    // loop through the result array, and print out each number
+    for (int i = 0; i < numOfDigits; i++)
+    {
+        std::cout << pNum[i];
+    }
+}
